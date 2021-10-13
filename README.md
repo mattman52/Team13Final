@@ -13,4 +13,4 @@ This is the final project for Team 13.
 - [ ] PHP and JS integration
 - [ ] Reports Queries
 - [ ] Styling 
-- [ ] 
+- [ ] Finsihing :(
