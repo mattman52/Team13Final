@@ -14,3 +14,6 @@ This is the final project for Team 13.
 - [ ] Reports Queries
 - [ ] Styling 
 - [ ] Finsihing :(
+
+
+http://ec2-18-221-124-62.us-east-2.compute.amazonaws.com/index.html
