@@ -5,41 +5,168 @@
 <html>
 <head>
   <link rel="shortcut icon" href="#">
-  <title>Welcome!</title>
-  <link rel="stylesheet" href="css/main.css">
+  <title>Viewing Games and Referees</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@next"></script>
 </head>
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
+<body>
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="index.html"><img src="img/isra.png"/></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="index.html">Home </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="assignor.html">Assignment</a>
+          <a class="nav-link" href="assignedTo.html">Assignments </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="about.html">About</a>
+          <a class="nav-link" href="assignor.html"><span class="sr-only">Games and Referees</span></a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Reports
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="reports.html">Referee Schedule</a>
-            <a class="dropdown-item" href="reports.html">Future Unassigned</a>
-            <a class="dropdown-item" href="reports.html">Other Reports</a>
-          </div>
+        <li class="nav-item">
+          <a class="nav-link" href="reports.html">Reports</a>
         </li>
       </ul>
     </div>
   </nav>
 
+  <div id="assignmentApp" class="container">
+    <div class="row justify-content-md-center" id="top">
+      <div class="col col-auto">
+        <!-- All Games listed with field names and the dates played -->
+        <div id="selections">
+          <button type="button" :class="['btn btn-outline-secondary', {selectedButton: selected == 'G'}]" v-on:click="selection('G')">View Games</button>
+          <button type="button" :class="['btn btn-outline-secondary', {selectedButton: selected == 'R'}]"  v-on:click="selection('R')">View Referees</button>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-md-center" id="content">
+      <div class="col col-lg-auto" v-if="selected == 'G'">
+        <h1 class="text-center">All Games</h1>
+<!-- Pull Table -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Playtime</th>
+              <th>Minimum Number of Refs</th>
+              <th>Controls</th>
+            </tr>
+          </thead>
+            <tbody>
+              <!-- Pull Specified Elements in Table -->
+                <tr v-for="game in content.games">
+                    <td>{{ game.field }}</td>
+                    <td>{{ game.playTime }}</td>
+                    <td> {{ game.minRef }} </td>
+                    <td>
+                      <button type="button" class="btn btn-outline-secondary btn-sm editText"
+                        v-on:click="select(game)"><img class ="edit"src="img/edit.png"/> Edit</button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm deleteText"
+                        v-on:click="postDelete(game)"><img class ="delete"src="img/bin.png"/> Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<!-- Icon elements from Matt from some other site
+Plus got help with creation of button and associated links -->
+        <h3>{{ selectedContent === null ? "Add" : "Edit" }} Game</h3>
+        <form v-on:submit.prevent="postForm">
+          <div class="mb-3">
+            <label for="gameField" class="form-label">Game Field</label>
+            <input required type="text" v-model="form.field" class="form-control" id="field">
+          </div>
+          <div class="mb-3">
+            <label for="playTime" class="form-label">Play Time</label>
+            <input required type="datetime-local" v-model="form.playTime" class="form-control" id="playTime">
+          </div>
+          <div class="mb-3">
+            <label for="Minimum" class="form-label">Minimum Number of Referees</label>
+            <input required type="number" v-model="form.minRef" class="form-control" id="minRef" min='0' max='10'>
+          </div>
+          <button type="submit" class="btn btn-primary sending">{{ selectedContent === null ? "Add" : "Edit" }} Game</button>
+          <button type="button" class="btn btn-outline-secondary cancel" 
+            v-if="selectedContent"
+            v-on:click="resetForm">Cancel</button>
+        </form>
+        <div class="nothing" v-if="! content.games.length">
+          <h3>No games. Please add games!</h3>
+        </div>
+
+      </div>
+      <div class="col col-lg-auto" v-if="selected == 'R'">
+        <h1>All Referees</h1>
+<!-- Table Building -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Referee</th>
+              <th>Date of Birth</th>
+              <th>Ranking</th>
+              <th>Grade</th>
+              <th>Controls</th>
+            </tr>
+          </thead>
+            <tbody>
+                <tr v-for="ref in content.ref">
+                    <td>{{ ref.fName }} {{ ref.lName }}</td>
+                    <td>{{ ref.dob }}</td>
+                    <td>{{ ref.ranking }}</td>
+                    <td>{{ ref.grade }}</td>
+                    <td>
+                      <button type="button" class="btn btn-outline-secondary btn-sm editText"
+                        v-on:click="select(ref)"><img class ="edit"src="img/edit.png"/>Edit</button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm deleteText"
+                        v-on:click="postDelete(ref)"><img class ="edit"src="img/bin.png"/>Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<!-- Linking Table in SQL -->
+        <h3>{{ selectedContent === null ? "Add" : "Edit" }} Referees</h3>
+        <form v-on:submit.prevent="postForm">
+          <div class="mb-3">
+            <label for="refFName" class="form-label">First Name</label>
+            <input required type="text" v-model="form.fName" class="form-control" id="refFName">
+          </div>
+          <div class="mb-3">
+            <label for="refLName" class="form-label">Last Name</label>
+            <input required type="text" v-model="form.lName" class="form-control" id="refLName">
+          </div>
+          <div class="mb-3">
+            <label for="refDob" class="form-label">Date of Birth</label>
+            <input required type="date" v-model="form.dob" class="form-control" id="refDob">
+          </div>
+          <div class="mb-3">
+            <label for="refRanking" class="form-label">Ranking of Referee</label>
+            <input required type="number" v-model="form.ranking" class="form-control" id="refRanking">
+          </div>
+          <div class="mb-3">
+            <label for="refGrade" class="form-label">Grade of Referee</label>
+            <input required type="number" v-model="form.grade" class="form-control" id="refGrade">
+          </div>
+          <button type="submit" class="btn btn-primary sending">{{ selectedContent === null ? "Add" : "Edit" }} Referee</button>
+          <button type="button" class="btn btn-outline-secondary cancel" 
+            v-if="selectedContent"
+            v-on:click="resetForm">Cancel</button>
+        </form>
+        <div class="nothing" v-if="! content.ref.length">
+          <h3>No Referees. Please add Referees!</h3>
+        </div>
+
+      </div>
+    </div>
+    </div>
+
+  </div>
+  
+  <script src="js/assignor.js"></script>
+</body>
 </html>
