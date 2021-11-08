@@ -20,7 +20,6 @@ const SomeApp = {
             if (g == this.selectedGame) {
                 return;
             }
-            console.log(g);
             this.selectedGame= g;
             this.referees = [];
             this.fetchRefereeData(this.selectedGame);
@@ -30,19 +29,15 @@ const SomeApp = {
             .then( response => response.json() )
             .then( (responseJson) => {
                 this.games = responseJson;
-                console.log(this.games);
             })
             .catch( (err) => {
                 console.error(err);
             })
         },
         fetchRefereeData(g) {
-            console.log("Fetching Referee data for ", g);
-
             fetch('/api/assignedTo/?game=' + g.gameId)
             .then( response => response.json() )
             .then( (responseJson) => {
-                console.log(responseJson);
                 this.referees = responseJson.Inner;
                 this.options = responseJson.Outer;
             })
@@ -61,10 +56,8 @@ const SomeApp = {
             }
           },
         postNewReferees(evt) {
-          console.log("Posting ", this.refereeForm);
           this.refereeForm.gameId = this.selectedGame.gameId;       
 
-          console.log("after ", this.refereeForm);
           fetch('api/assignedTo/create.php', {
               method:'POST',
               body: JSON.stringify(this.refereeForm),
@@ -74,7 +67,6 @@ const SomeApp = {
             })
             .then( response => response.json() )
             .then( json => {
-              console.log("Returned from post:", json);
               // TODO: test a result was returned!
               this.referees = json.Inner;
               this.options = json.Outer;
@@ -86,11 +78,7 @@ const SomeApp = {
             });
         },
         postEditReferees(evt) {
-            console.log("Posting ", this.refereeForm);
-            this.refereeForm.gameId = this.selectedGame.gameId;       
-
-            console.log("after ", this.refereeForm);
-    
+            this.refereeForm.gameId = this.selectedGame.gameId;           
             fetch('api/assignedTo/update.php', {
                 method:'POST',
                 body: JSON.stringify(this.refereeForm),
@@ -100,7 +88,6 @@ const SomeApp = {
               })
               .then( response => response.json() )
               .then( json => {
-                console.log("Returned from post:", json);
                 // TODO: test a result was returned!
                 this.referees = json.Inner;
                 this.options = json.Outer;
@@ -109,7 +96,6 @@ const SomeApp = {
               });
           },
           postDeleteRef(r) {
-            console.log(r);
             if (!confirm("Are you sure you want to delete the referee: "+r.lName+"?")) {
                 return;
             }
@@ -122,7 +108,6 @@ const SomeApp = {
               })
               .then( response => response.json() )
               .then( json => {
-                console.log("Returned from post:", json);
                 // TODO: test a result was returned!
                 this.referees = json.Inner;
                 this.options = json.Outer;
@@ -132,7 +117,6 @@ const SomeApp = {
           },
           selectRef(r) {
             this.selectedRef = r;
-            console.log(this.selectedRef);
             this.refereeForm = Object.assign({}, this.selectedRef);
           },
           resetRefereeForm() {

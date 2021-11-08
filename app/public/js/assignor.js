@@ -22,7 +22,6 @@ const SomeApp = {
             fetch('/api/assignor/')
             .then( response => response.json() )
             .then( (responseJson) => {
-                console.log(responseJson);
                 this.content = responseJson;
             })
             .catch( (err) => {
@@ -40,9 +39,7 @@ const SomeApp = {
           }
         },
         postNew(evt) { 
-          this.form.type = this.selected;
-          console.log("Creating!", this.form);
-  
+          this.form.type = this.selected;  
           fetch('api/assignor/create.php', {
               method:'POST',
               body: JSON.stringify(this.form),
@@ -52,7 +49,6 @@ const SomeApp = {
             })
             .then( response => response.json() )
             .then( json => {
-              console.log("Returned from post:", json);
               // TODO: test a result was returned!
               this.content = json;
               
@@ -64,8 +60,6 @@ const SomeApp = {
         },
         postEdit(evt) {          
           this.form.type = this.selected;
-          console.log("Updating!", this.form);
-  
           fetch('api/assignor/updateGame.php', {
               method:'POST',
               body: JSON.stringify(this.form),
@@ -75,7 +69,6 @@ const SomeApp = {
             })
             .then( response => response.json() )
             .then( json => {
-              console.log("Returned from post:", json);
               // TODO: test a result was returned!
               this.content = json;
               this.resetForm();
@@ -83,7 +76,6 @@ const SomeApp = {
         },
         postDelete(g) {
           g.type = this.selected;
-          console.log("Updating!", g);
           if(this.selected == 'G'){
             if (!confirm("Are you sure you want to delete: "+g.field+"? This will delete all referees assigned to the game and the game data.")) {
                 return;
@@ -102,7 +94,6 @@ const SomeApp = {
             })
             .then( response => response.json() )
             .then( json => {
-              console.log("Returned from post:", json);
               // TODO: test a result was returned!
               this.content = json;
               this.resetForm();

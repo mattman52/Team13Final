@@ -14,7 +14,6 @@ const SomeApp = {
           fetch('/api/report/')
           .then( response => response.json() )
           .then( (responseJson) => {
-              console.log(responseJson);
               this.referees = responseJson;
           })
           .catch( (err) => {
@@ -22,9 +21,6 @@ const SomeApp = {
           })
       },
       getReportRef(evt) {   
-        
-        console.log("Updating!", this.refForm);
-
         fetch('api/report/refereeReport.php', {
             method:'POST',
             body: JSON.stringify(this.refForm),
@@ -34,7 +30,6 @@ const SomeApp = {
           })
           .then( response => response.json() )
           .then( json => {
-            console.log("Returned from post:", json);
             // TODO: test a result was returned!
             this.refereeReport = json;
             
