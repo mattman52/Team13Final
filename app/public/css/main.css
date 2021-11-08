@@ -1,3 +1,133 @@
-* {
-    background-color: #5e8c51;
+/*
+universal
+*/
+
+#top {
+    margin-top: .5in;
+}
+#bolding {
+    font-weight: bold;
+}
+.editText {
+    color: #091971;
+    font-weight: bold;
+}
+.edit {
+    height: 30px;
+    width: 30px;
+}
+.deleteText {
+    color: #522532;
+    font-weight: bold;
+}
+.delete {
+    height: 30px;
+    width: 30px;
+}
+.sending {
+    background-color: #091971;
+    color: #FAFDFF;
+}
+.cancel {
+    margin-left: 20px;
+    background-color: #522532;
+    color: #FAFDFF;
+}
+
+/* 
+AssignedTo.html 
+*/
+
+.game {
+    margin: 10px 2px;
+    padding: 4px;
+    border: 1px solid gray;
+    background-color: #091971;
+    color: #FAFDFF;
+}
+.minRef {
+    background-color: #522532;
+    color: #FAFDFF;
+}
+.selected {
+    background-color: #181B1D;
+    font-weight: underline;
+}
+.gameName {
+    font-weight:bold;
+    font-size: 25;
+    text-align: center;
+}
+
+.gameDate{
+    color: gray;
+}
+.numberMin {
+    color: gray;
+}
+
+#legend {
+    font-size: 12px;
+}
+#minRefColor {
+    background-color: #522532;
+    color: transparent;
+}
+#meetingRefColor {
+    background-color: #091971;
+    color: transparent;
+}
+#selectedRef {
+    background-color: #181B1D;
+    color: transparent;
+}
+/*
+Nav bar 
+*/
+
+a.nav-link{
+    font-size: 26px;
+    color: #FAFDFF;
+    font-weight: bold;
+}
+img{
+    height: 100px;
+    width: 150px; 
+}
+nav{
+    background-color: #181B1D;
+}
+a.nav-link:hover{
+    color: #522532;
+}
+
+/*
+index.html
+*/
+
+#whereTo {
+    padding: 0;
+    list-style: url('/img/soccer-ball.png');
+}
+#content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.right {
+    text-align: center;
+}
+.page {
+    border-bottom: 3px solid #091971;
+    color: #181B1D;
+}
+
+/*
+assignor.html
+*/
+.regular {
+    background-color: grey;
+}
+.selectedButton {
+    background-color: #181B1D;
+    color: #FAFDFF;
 }
