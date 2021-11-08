@@ -1,0 +1,138 @@
+<!doctype html>
+
+<meta charset="UTF-8">
+
+<html>
+<head>
+  <link rel="shortcut icon" href="#">
+  <title>Assining Referees</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="index.html"><img src="img/isra.png"/></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="index.html">Home </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="assignedTo.html"><span class="sr-only">(Assignments)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="assignor.html">Games and Referees</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="reports.html">Reports</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="reportApp" class="container">
+    <div class="row align-items-start" id="top">
+      <div class="col col-3">
+        <!-- All Games listed with field names and the dates played -->
+        <div v-for="g in games" v-on:click="selectGame(g)"
+         :class="['game', {selected: selectedGame && g.gameId == selectedGame.gameId}, {minRef: g.minRef > g.counted }]">
+          <span class="gameName">{{ g.field }}</span><br>
+          <!-- Clean Date Data HERE -->
+          <span class="gameDate">Time: {{ g.playTime }}</span><br>
+          <span class="numberMin">Min Referees to Assigned: {{ g.minRef }}/{{ g.counted }}</span>
+        </div>
+        <div id="legend">
+          <p><span id="minRefColor">col</span> Games <span id="bolding">not</span> meeting minimum referee Requirments</p>
+          <p><span id="meetingRefColor">col</span> Games <span id="bolding">meeting</span> minimum referee Requirments</p>
+          <p><span id="selectedRef">col</span> Currently selected game</p>
+        </div>
+      </div>
+      <!-- once a game is clicked the referees for all the games are listed -->
+      <div class="col col-9 form" v-if="selectedGame">
+        <h1 class="text-center">Referees for: {{ selectedGame.field }}</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Referee Name</th>
+              <th>Ranking</th>
+              <th>Grade</th>
+              <th>Acceptance Status</th>
+              <th>Assignment Status</th>
+              <th>Controls</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr v-for="ref in referees">
+                  <td>{{ ref.fName }} {{ ref.lName }} </td>
+                  <td>{{ ref.ranking }}</td>
+                  <td> {{ ref.grade }}</td>
+                  <td>{{ ref.acceptanceStatus }}</td>
+                  <td>{{ ref.assigenmentStatus }}</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-secondary btn-sm editText"
+                      v-on:click="selectRef(ref)"><img class ="edit"src="img/edit.png"/> Edit</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm deleteText"
+                      v-on:click="postDeleteRef(ref)"><img class ="edit"src="img/bin.png"/> Delete</button>
+                  </td>
+              </tr>
+          </tbody>
+        </table>
+
+        <form v-on:submit.prevent="postReferee">
+          <div class="mb-3">
+            <label for="refName" class="form-label">Referee Name</label>
+            <select required v-model="refereeForm.refId" class="form-control" id="refName">
+              <!-- 
+                <option v->
+                 Add in the v if function to check for if the edit button was selected and continue out
+              </option>
+              -->
+              <option v-if="selectedRef" v-bind:value="refereeForm.refId">
+                {{ selectedRef.fName}} {{ selectedRef.lName }}
+              </option>
+              <option v-for="option in options" v-bind:value="option.refereeId">
+                {{ option.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="acceptanceStatus" class="form-label">Acceptance Status</label>
+            <select required v-model="refereeForm.acceptanceStatus" class="form-control" id="acceptanceStatus">
+              <option value="Unseen">Unseen</option>
+              <option value="Declined">Declined</option>
+              <option value="Tentative">Tentative</option>
+              <option value="Accepted">Accepted</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="assigenmentStatus" class="form-label">Acceptance Status</label>
+            <select required v-model="refereeForm.assigenmentStatus" class="form-control" id="assigenmentStatus">
+              <option value="Unassigned">Unassigned</option>
+              <option value="Assigned">Assigned</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary sending">{{ selectedRef === null ? "Add" : "Edit" }} Referee</button>
+              <button type="button" class="btn btn-outline-secondary cancel" 
+                v-if="selectedRef"
+                v-on:click="resetRefereeForm">Cancel</button>
+        </form>
+        <div class="noRef" v-if="! referees.length">
+          <h3>No Referees for {{ selectedGame.field }}.</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/assignedTo.js"></script>
+
+</body>
+</html>
